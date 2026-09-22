@@ -30,30 +30,36 @@ int main() {
     int yStartSnake = 15;
     int xRealSnake = xStartSnake;
     int yRealSnake = yStartSnake;
-    int snakeDirection = 0; // 0N, 1E, 2S, 3W
+    int snakeDirection = 3; // 0N, 1E, 2S, 3W
+    int isGameOver = 0;
 
     while (1) {
         switch (snakeDirection) {
-            case 0:
-                if (!isYOutOfBounds(yRealSnake + 1)) {
-                    yRealSnake++;
-                }
-                break;
-            case 1:
-                if (!isXOutOfBounds(xRealSnake + 1)) {
-                    xRealSnake++;
-                } 
-                break;
-            case 2:
+            case 0: // going up
                 if (!isYOutOfBounds(yRealSnake - 1)) {
                     yRealSnake--;
-                }
+                } else isGameOver = 1;
                 break;
-            case 3:
+            case 1: // going right
+                if (!isXOutOfBounds(xRealSnake + 1)) {
+                    xRealSnake++;
+                } else isGameOver = 1;
+                break;
+            case 2: // going down
+                if (!isYOutOfBounds(yRealSnake + 1)) {
+                    yRealSnake++;
+                } else isGameOver = 1;
+                break;
+            case 3: // going left
                 if (!isXOutOfBounds(xRealSnake - 1)) {
                     xRealSnake--;
-                }
+                } else isGameOver = 1;
                 break;
+        }
+
+        if (isGameOver) {
+            printf("GAME OVER\n");
+            break;
         }
 
         for (int y = yMinScreen; y <= yMaxScreen; ++y) {
