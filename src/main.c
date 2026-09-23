@@ -6,6 +6,11 @@ int xMaxScreen = 60;
 int yMinScreen = 0;
 int yMaxScreen = 35;
 
+typedef struct {
+    int x;
+    int y;
+} Point;
+
 void clear_screen() {
     printf("\033[2J\033[H");
     fflush(stdout);
@@ -25,34 +30,45 @@ int isYOutOfBounds(int yCoords) {
 
 
 int main() {
-    int sleepTime = 100 * 1000; //ms
-    int xStartSnake = 30;
-    int yStartSnake = 15;
-    int xRealSnake = xStartSnake;
-    int yRealSnake = yStartSnake;
-    int snakeDirection = 3; // 0N, 1E, 2S, 3W
+    int sleepTime = 200 * 1000; //ms
+    int snakeDirection = 0; // 0N, 1E, 2S, 3W
     int isGameOver = 0;
+    int snakeSize = 3;
+
+    Point head;
+    head.x = 30;
+    head.y = 15;
+
+    Point body[100];
 
     while (1) {
+        for (int i = snakeSize - 1; i > 0; --i) {
+            body[i] = body[i - 1];
+        }
+        body[0] = head;
+
         switch (snakeDirection) {
             case 0: // going up
-                if (!isYOutOfBounds(yRealSnake - 1)) {
-                    yRealSnake--;
+                if (!isYOutOfBounds(head.y - 1)) {
+                    head.y--;
                 } else isGameOver = 1;
                 break;
+
             case 1: // going right
-                if (!isXOutOfBounds(xRealSnake + 1)) {
-                    xRealSnake++;
+                if (!isXOutOfBounds(head.x + 1)) {
+                    head.x++;
                 } else isGameOver = 1;
                 break;
+
             case 2: // going down
-                if (!isYOutOfBounds(yRealSnake + 1)) {
-                    yRealSnake++;
+                if (!isYOutOfBounds(head.y + 1)) {
+                    head.y++;
                 } else isGameOver = 1;
                 break;
+                
             case 3: // going left
-                if (!isXOutOfBounds(xRealSnake - 1)) {
-                    xRealSnake--;
+                if (!isXOutOfBounds(head.x - 1)) {
+                    head.x--;
                 } else isGameOver = 1;
                 break;
         }
@@ -69,11 +85,24 @@ int main() {
                 if (y == yMinScreen || y == yMaxScreen || x == xMinScreen || x == xMaxScreen) {
                     printf("&");
                 } 
-                else if (y == yRealSnake && x == xRealSnake) {
+                else if (y == head.y && x == head.x) {
                     printf("O");
                 }
                 else {
-                    printf(" ");
+                    int isBody = 0;
+                    for (int i = 0; i < snakeSize; i++) {
+                        if (x == body[i].x && y == body[i].y) {
+                            isBody = 1;
+                            break;
+                        }
+                    }
+                    if (isBody) {
+                        printf("o");
+                    }
+                    else {
+                        printf(" ");
+                    }
+                    
                 }
             }
         printf("\n");
