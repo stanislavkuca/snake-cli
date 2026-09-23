@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <unistd.h>
 #include <termios.h>
 #include <fcntl.h>
@@ -61,7 +63,10 @@ int main() {
     int snakeDirection = 0; // 0N, 1E, 2S, 3W
     int isGameOver = 0;
     int snakeSize = 3;
-
+    int xApple = 0;
+    int yApple = 0;
+    int isAppleEaten = 1;
+    
     Point head;
     head.x = 30;
     head.y = 15;
@@ -73,6 +78,16 @@ int main() {
             body[i] = body[i - 1];
         }
         body[0] = head;
+
+        if (isAppleEaten) {
+            srand(time(NULL));
+            xApple = rand() % xMaxScreen + 1;
+            if (xApple == xMaxScreen) {xApple--;}
+            yApple = rand() % yMaxScreen + 1;
+            if (yApple == yMaxScreen) {yApple--;}
+
+            isAppleEaten = 0;
+        }
 
         int ch = getchar();
         if(ch != EOF) {
@@ -134,6 +149,9 @@ int main() {
                     }
                     if (isBody) {
                         printf("o");
+                    }
+                    else if (x == xApple && y == yApple) {
+                        printf("x");
                     }
                     else {
                         printf(" ");
