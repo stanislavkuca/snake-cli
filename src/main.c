@@ -147,11 +147,14 @@ int main() {
             break;
         }
 
-        for (int y = yMinScreen; y <= yMaxScreen; ++y) {
+        for (int y = yMinScreen; y <= yMaxScreen + 1; ++y) {
 
             for (int x = xMinScreen; x <= xMaxScreen; ++x) {
-
-                if (y == yMinScreen || y == yMaxScreen || x == xMinScreen || x == xMaxScreen) {
+                
+                if (y == yMaxScreen + 1 && x == xMinScreen) {
+                    printf("Points: %d   Body size: %d", snakeSize - 3, snakeSize + 1);
+                }
+                else if (y == yMinScreen || y == yMaxScreen || x == xMinScreen || x == xMaxScreen) {
                     printf("&");
                 } 
                 else if (y == head.y && x == head.x) {
