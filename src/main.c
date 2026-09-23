@@ -39,9 +39,9 @@ void clear_screen() {
 
 
 int xMinScreen = 0;
-int xMaxScreen = 60;
+int xMaxScreen = 25;
 int yMinScreen = 0;
-int yMaxScreen = 35;
+int yMaxScreen = 10;
 
 int isXOutOfBounds(int xCoords) {
         if (xCoords > xMinScreen && xCoords < xMaxScreen) {
@@ -58,9 +58,10 @@ int isYOutOfBounds(int yCoords) {
 
 int main() {
     enable_raw_mode();
+    srand(time(NULL));
 
     int sleepTime = 200 * 1000; //ms
-    int snakeDirection = 0; // 0N, 1E, 2S, 3W
+    int snakeDirection = 1; // 0N, 1E, 2S, 3W
     int isGameOver = 0;
     int snakeSize = 3;
     int xApple = 0;
@@ -68,8 +69,10 @@ int main() {
     int isAppleEaten = 1;
     
     Point head;
-    head.x = 30;
-    head.y = 15;
+    head.x = rand() % xMaxScreen + 1;
+    if (head.x > (xMaxScreen / (xMinScreen + 2))) {head.x -= xMaxScreen / 5;}
+    head.y = rand() % yMaxScreen + 1;
+    if (head.y == yMaxScreen) {head.y--;}
 
     Point body[100];
 
@@ -80,11 +83,26 @@ int main() {
         body[0] = head;
 
         if (isAppleEaten) {
-            srand(time(NULL));
-            xApple = rand() % xMaxScreen + 1;
-            if (xApple == xMaxScreen) {xApple--;}
-            yApple = rand() % yMaxScreen + 1;
-            if (yApple == yMaxScreen) {yApple--;}
+            int isOnSnake = 1;
+
+            do {
+                isOnSnake = 0;
+
+                xApple = rand() % (xMaxScreen - 1) + 1;
+                yApple = rand() % (yMaxScreen - 1) + 1;
+
+                if (xApple == head.x && yApple == head.y) {
+                    isOnSnake = 1;
+                }
+
+                for (int i = 0; i < snakeSize; i++) {
+                    if (xApple == body[i].x && yApple == body[i].y) {
+                        isOnSnake = 1;
+                        break;
+                    }
+                }
+            } while (isOnSnake == 1);
+            
 
             isAppleEaten = 0;
         }
