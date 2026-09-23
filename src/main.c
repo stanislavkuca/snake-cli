@@ -63,10 +63,12 @@ int main() {
     int sleepTime = 200 * 1000; //ms
     int snakeDirection = 1; // 0N, 1E, 2S, 3W
     int isGameOver = 0;
+    int isGameWon = 0;
     int snakeSize = 3;
     int xApple = 0;
     int yApple = 0;
     int isAppleEaten = 1;
+    int gameArea = (xMaxScreen - 2) * (yMaxScreen - 2);
     
     Point head;
     head.x = rand() % xMaxScreen + 1;
@@ -74,7 +76,7 @@ int main() {
     head.y = rand() % yMaxScreen + 1;
     if (head.y == yMaxScreen) {head.y--;}
 
-    Point body[100];
+    Point body[gameArea];
 
     while (1) {
         for (int i = snakeSize - 1; i > 0; --i) {
@@ -143,7 +145,11 @@ int main() {
         }
 
         if (isGameOver) {
-            printf("GAME OVER\n");
+            printf("=========\nGAME OVER\n=========\n");
+            break;
+        }
+        if (isGameWon) {
+            printf("=============\nYOU HAVE WON!\n=============\n");
             break;
         }
 
@@ -170,6 +176,10 @@ int main() {
                     if (head.y == yApple && head.x == xApple) {
                         isAppleEaten = 1;
                         snakeSize++;
+
+                        if (snakeSize == gameArea) {
+                            isGameWon = 1;
+                        }
                     }
                 }
                 else {
