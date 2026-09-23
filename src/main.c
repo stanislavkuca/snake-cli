@@ -137,7 +137,19 @@ int main() {
                     printf("&");
                 } 
                 else if (y == head.y && x == head.x) {
+                    for (int i = 1; i < snakeSize; i++) {
+                        if (head.x == body[i].x && head.y == body[i].y) {
+                            isGameOver = 1;
+                            break;
+                        }
+                    }
+
                     printf("O");
+
+                    if (head.y == yApple && head.x == xApple) {
+                        isAppleEaten = 1;
+                        snakeSize++;
+                    }
                 }
                 else {
                     int isBody = 0;
